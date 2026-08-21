@@ -12,6 +12,6 @@ receives only part of the payload. I have the encoder and decoder written in C. 
 to a txt file and then used a basic python script to convert it back to a bin file. Could I have just done this in the encoder? 
 Yes, I could have, but i did feel like testing my python since i despise it and rarely ever touch the thing to begin with. 
 I also have a PowerShell script to check and make sure that the output from the decoder and the original bin file chars match. 
-The images folder will show how exactly I did everything. Now, it is time to go back to more exploits.
+Now, it is time to go back to more exploits.
 
 ![Demonstration](img/Screenshot%202026-08-20%20215709.png)
