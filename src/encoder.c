@@ -12,19 +12,19 @@ const int BAD_CHARS_LENS = 4;
 
 
 // defining the key for XOR
-#define DEFAULT_KEY 0x55;
+#define DEFAULT_KEY 0x55
 
 
 // function prototypes
 int bad_byte(unsigned char byte);
-unsigned char byte_encode(unsigned char original, int *key);
+unsigned char byte_encode(unsigned char original, unsigned char *key);
 
 
 // helper for checking if byte is bad
 int bad_byte(unsigned char byte)
 {
     for (int i = 0; i < BAD_CHARS_LENS; i++) {
-        if (byte == BAD_CHARS_LENS)
+        if (byte == bad_chars[i])
         {
             return 1;
         }
@@ -34,35 +34,28 @@ int bad_byte(unsigned char byte)
 
 
 // helper for encoding
-unsigned char encode_byte(unsigned char original, int *key)
-{
+unsigned char encode_byte(unsigned char original, unsigned char *key) {
     unsigned char result;
     int attempts = 0;
 
     while (1) {
         result = original ^ (*key);
-
-        result = (result + (*key) & 0xFF);
-
+        result = (result + (*key)) & 0xFF;
         result = result ^ 0x11;
 
-        if (!bad_byte(result))
-        {
+        if (!bad_byte(result)) {
             return result;
         }
 
         (*key)++;
-
-        if (*key > 0xFF) *key = 1;
-
+  
         attempts++;
         if (attempts > 256) {
-            fprintf(stderr, "Error: Failed to encode byte 0x%02x without bad chars.\n", original);
+            fprintf(stderr, "Error: Failed to encode byte 0x%02x\n", original);
             exit(1);
         }
     }
 }
-
 
 int main (int argc, char *argv[]) {
 
@@ -115,26 +108,25 @@ int main (int argc, char *argv[]) {
         return 1;
     }
 
-    int current_key = DEFAULT_KEY;
-    printf("[+] Encoded Shellcode: Key starts at 0x%02X\n");
+    unsigned char current_key = DEFAULT_KEY;
+    printf("[+] Encoded Shellcode: Key starts at 0x%02X\n", current_key);
     printf("[+] Payload[] = {\n");
 
 
     // looping through and encoding the bytes
-    for (long i = 0; i < file_size; i++)
-    {
-        encoded[i] = encode_byte(shellcode[i], &current_key);
+    for (long i = 0; i < file_size; i++) {
+        unsigned char encoded = encode_byte(shellcode[i], &current_key);
+        unsigned char key_used = current_key;
 
-        printf("0x%02x", encoded[i]);
+        
+        printf("0x%02x,0x%02x", encoded, key_used);
 
         if (i < file_size - 1) {
             printf(", ");
-
-            if ((i + 1) % 16 == 0) {
-                printf("\n");
-
-            }
+            if ((i + 1) % 8 == 0) printf("\n");
         }
+
+        current_key++;
     }
 
     printf("\n}\n");
