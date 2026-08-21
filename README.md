@@ -13,3 +13,5 @@ to a txt file and then used a basic python script to convert it back to a bin fi
 Yes, I could have, but i did feel like testing my python since i despise it and rarely ever touch the thing to begin with. 
 I also have a PowerShell script to check and make sure that the output from the decoder and the original bin file chars match. 
 The images folder will show how exactly I did everything. Now, it is time to go back to more exploits.
+
+![Demonstration](img/Screenshot 2026-08-20 215709.png)
